@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaxBot — CA Gurdeep Singh Bagga</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f1729;--gold:#c9a84c;--g2:#7a4a00;--white:#fff;--muted:#8090a8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--navy);color:var(--white);height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+header{background:rgba(15,23,41,0.98);border-bottom:2px solid var(--gold);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;height:50px;}
+.hl{display:flex;align-items:center;gap:10px;}
+.logo{width:32px;height:32px;background:linear-gradient(135deg,var(--gold),var(--g2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.ht h1{font-family:'Playfair Display',serif;font-size:15px;color:var(--white);line-height:1.1;}
+.ht p{font-size:10px;color:var(--gold);}
+.hright{display:flex;align-items:center;gap:6px;}
+.abtn{padding:4px 10px;border-radius:14px;border:none;cursor:pointer;font-size:11px;font-weight:700;font-family:'Source Sans 3',sans-serif;white-space:nowrap;}
+.aon{background:rgba(42,122,75,0.3);color:#4ade80;border:1px solid rgba(42,122,75,0.5);}
+.aoff{background:rgba(176,48,48,0.3);color:#ff9090;border:1px solid rgba(176,48,48,0.4);}
+.sb{display:flex;align-items:center;gap:5px;background:rgba(42,122,75,0.2);border:1px solid rgba(42,122,75,0.4);padding:3px 9px;border-radius:20px;font-size:10px;color:#4ade80;}
+.dot{width:5px;height:5px;background:#4ade80;border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.sbar{background:rgba(15,23,50,0.95);border-bottom:1px solid rgba(201,168,76,0.15);padding:3px 14px;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.sbar .mode{color:var(--gold);font-weight:700;}
+.vbar{background:rgba(20,30,50,0.98);border-bottom:1px solid rgba(201,168,76,0.2);padding:5px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0;height:38px;overflow-x:auto;}
+.vl{font-size:10px;color:var(--gold);font-weight:700;letter-spacing:1px;white-space:nowrap;}
+.vb{padding:3px 10px;border-radius:14px;border:none;cursor:pointer;font-size:11px;font-weight:600;font-family:'Source Sans 3',sans-serif;white-space:nowrap;}
+.von{background:var(--gold);color:var(--navy);} .voff{background:rgba(255,255,255,0.1);color:var(--white);border:1px solid rgba(255,255,255,0.2);} .vstop{background:rgba(176,48,48,0.4);color:#ff9090;}
+.vsp{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);} .vsp input{width:55px;accent-color:var(--gold);}
+#vs{font-size:10px;color:#4ade80;margin-left:auto;white-space:nowrap;font-weight:600;}
+#vs.sp{color:var(--gold);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+.main{flex:1;display:flex;overflow:hidden;min-height:0;}
+.sidebar{width:210px;background:rgba(10,16,30,0.95);border-right:1px solid rgba(201,168,76,0.15);overflow-y:auto;padding:10px 8px;flex-shrink:0;}
+@media(max-width:650px){.sidebar{display:none;}}
+.sidebar h3{font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(201,168,76,0.2);}
+.qq{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:5px;padding:5px 7px;font-size:11px;color:#b0c0d8;cursor:pointer;margin-bottom:3px;transition:all 0.2s;line-height:1.3;}
+.qq:hover{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.4);color:#f0d080;}
+.st{font-size:9px;color:var(--gold);font-weight:700;margin:8px 0 3px;text-transform:uppercase;}
+.si{margin-top:10px;padding:8px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:6px;font-size:10px;color:var(--muted);line-height:1.7;}
+.si strong{color:var(--gold);}
+.chat-area{flex:1;display:flex;flex-direction:column;min-height:0;background:#f5f7fa;position:relative;}
+#messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:0;}
+.mb,.mu{max-width:88%;padding:10px 14px;border-radius:12px;font-size:13.5px;line-height:1.8;animation:fi 0.3s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.mb{background:white;color:#1a1a2e;border:1px solid #e0e8f0;border-bottom-left-radius:3px;align-self:flex-start;box-shadow:0 2px 6px rgba(0,0,0,0.07);}
+.mb .bl{font-size:10px;color:var(--gold);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.mu{background:var(--navy);color:white;border-bottom-right-radius:3px;align-self:flex-end;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+.ti{display:none;align-self:flex-start;background:white;border:1px solid #e0e8f0;border-radius:10px;border-bottom-left-radius:3px;padding:9px 13px;}
+.ti.show{display:flex;align-items:center;gap:4px;}
+.td{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:bounce 1.2s infinite;}
+.td:nth-child(2){animation-delay:0.2s}.td:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.ia{background:white;border-top:2px solid #e0e8f0;padding:9px 11px;display:flex;gap:7px;align-items:center;flex-shrink:0;}
+#ui{flex:1;border:2px solid #e0e8f0;border-radius:22px;padding:8px 15px;font-size:14px;font-family:'Source Sans 3',sans-serif;outline:none;transition:border-color 0.2s;color:#1a1a2e;}
+#ui:focus{border-color:var(--gold);}
+#ui::placeholder{color:#a0b0c0;}
+.sbtn{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--g2));border:none;border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sbtn:hover{transform:scale(1.08);}
+.mic-btn{width:38px;height:38px;background:rgba(15,23,41,0.08);border:2px solid #e0e8f0;border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mic-btn:hover{border-color:var(--gold);}
+.mic-btn.rec{background:rgba(176,48,48,0.2);border-color:#ff4444;animation:pr 0.8s infinite;}
+@keyframes pr{0%,100%{box-shadow:0 0 0 0 rgba(176,48,48,0.4)}50%{box-shadow:0 0 0 8px rgba(176,48,48,0)}}
+.disc{background:rgba(176,48,48,0.1);border-top:1px solid rgba(176,48,48,0.2);padding:4px 14px;font-size:9px;color:#ff9999;text-align:center;flex-shrink:0;}
+.atitle{font-weight:700;color:#0a3060;font-size:14px;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid #f0d080;}
+.arow{padding:4px 0;border-bottom:1px solid #f0f4f8;font-size:13px;} .arow:last-child{border-bottom:none;}
+.rate{display:inline-block;background:#0f3060;color:#f0d080;padding:1px 8px;border-radius:4px;font-weight:700;font-size:12px;}
+.sec{display:inline-block;background:#fff3d0;color:#7a4400;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:600;border:1px solid #e8c060;}
+.ebox{background:#f8faff;border-left:3px solid var(--gold);padding:7px 11px;margin:6px 0;border-radius:0 7px 7px 0;font-size:13px;}
+.ctact{background:#fff8e6;border:2px solid var(--gold);border-radius:7px;padding:9px 13px;margin-top:12px;font-size:12px;color:#7a4400;font-weight:600;line-height:1.8;}
+.src-ai{font-size:9px;background:rgba(42,122,75,0.2);color:#22c55e;padding:1px 7px;border-radius:8px;}
+.src-kb{font-size:9px;background:rgba(201,168,76,0.2);color:#c9a84c;padding:1px 7px;border-radius:8px;}
+.vpanel{display:none;position:absolute;bottom:60px;left:50%;transform:translateX(-50%);background:var(--navy);border:2px solid var(--gold);border-radius:12px;padding:14px 20px;text-align:center;z-index:100;min-width:280px;box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+.vpanel.show{display:block;}
+.vanim{width:50px;height:50px;border-radius:50%;border:3px solid #ff4444;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 10px;animation:vp 0.8s infinite;}
+@keyframes vp{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.vres{font-size:12px;color:#c0cce0;min-height:18px;font-style:italic;margin:6px 0;}
+.vstopbtn{background:rgba(176,48,48,0.3);color:#ff9090;border:1px solid rgba(176,48,48,0.4);padding:5px 14px;border-radius:12px;cursor:pointer;font-size:11px;font-family:'Source Sans 3',sans-serif;}
+.modal{position:fixed;inset:0;background:rgba(5,10,20,0.97);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;}
+.mcard{background:linear-gradient(145deg,#0f1729,#1a2540);border:2px solid var(--gold);border-radius:16px;padding:24px;max-width:480px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.6);max-height:92vh;overflow-y:auto;}
+.mcard h2{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:6px;text-align:center;}
+.msub{font-size:12px;color:#a0b0c0;text-align:center;margin-bottom:16px;line-height:1.5;}
+.khelp{font-size:11px;color:#5a8a6a;margin-bottom:10px;padding:10px 12px;background:rgba(42,122,75,0.1);border-radius:8px;border-left:3px solid #2a7a4b;line-height:1.8;}
+.khelp a{color:#4ade80;}
+.kwrap{position:relative;margin-bottom:6px;}
+.kinp{width:100%;background:rgba(255,255,255,0.06);border:2px solid rgba(201,168,76,0.3);border-radius:8px;padding:11px 42px 11px 14px;font-size:13px;color:var(--white);font-family:'Source Sans 3',sans-serif;outline:none;transition:border-color 0.2s;}
+.kinp:focus{border-color:var(--gold);}
+.kinp::placeholder{color:#3a4a5a;}
+.eyebtn{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--muted);}
+.kerr{font-size:11px;color:#ff7070;margin-bottom:8px;padding:6px 10px;background:rgba(176,48,48,0.1);border-radius:5px;display:none;}
+.saverow{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(201,168,76,0.2);}
+.saverow label{font-size:12px;color:var(--white);font-weight:600;cursor:pointer;}
+.sdesc{font-size:10px;color:var(--muted);margin-top:1px;}
+.mrow{display:flex;gap:8px;margin-top:4px;}
+.btnp{flex:1;padding:11px;background:linear-gradient(135deg,var(--gold),var(--g2));color:var(--navy);border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;}
+.btns{padding:11px 16px;background:rgba(255,255,255,0.07);color:#8090a8;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:12px;font-family:'Source Sans 3',sans-serif;cursor:pointer;}
+.delrow{display:none;text-align:center;margin-top:12px;font-size:11px;}
+.dellink{color:var(--gold);cursor:pointer;text-decoration:underline;}
+.delbox{position:fixed;inset:0;background:rgba(5,10,20,0.97);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;}
+.delcard{background:linear-gradient(145deg,#0f1729,#1a2540);border:2px solid var(--gold);border-radius:14px;padding:28px;max-width:360px;width:100%;text-align:center;}
+.delcard h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:8px;}
+.delcard p{font-size:13px;color:#a0b0c0;margin-bottom:20px;line-height:1.5;}
+.delbtn-row{display:flex;gap:10px;justify-content:center;}
+.btn-yes{padding:10px 20px;background:linear-gradient(135deg,#b03030,#7a1a1a);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;}
+.btn-no{padding:10px 20px;background:rgba(255,255,255,0.08);color:#8090a8;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:13px;cursor:pointer;font-family:'Source Sans 3',sans-serif;}
+.wl{width:58px;height:58px;background:linear-gradient(135deg,var(--gold),var(--g2));border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;}
+.feats{text-align:left;margin:12px 0;}
+.feat{display:flex;align-items:center;gap:7px;font-size:12px;color:#c0cce0;margin-bottom:6px;}
+#toast{position:fixed;bottom:50px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(15,23,41,0.96);border:1px solid rgba(201,168,76,0.3);color:#f0d080;padding:7px 16px;border-radius:20px;font-size:11px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9998;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div class="modal" id="wModal">
+  <div class="mcard" style="text-align:center;max-width:420px">
+    <div class="wl">⚖️</div>
+    <h2>TaxBot Assistant</h2>
+    <div style="color:var(--gold);font-size:12px;margin-bottom:14px">CA Gurdeep Singh Bagga | FY 2025-26</div>
+    <div class="feats">
+      <div class="feat"><span>🤖</span><b>AI Mode</b> — Answers ANY Income Tax &amp; GST question</div>
+      <div class="feat"><span>⚡</span>Powered by Anthropic Claude AI (browser-compatible)</div>
+      <div class="feat"><span>📚</span><b>Offline Mode</b> — 52 topics built-in knowledge base</div>
+      <div class="feat"><span>🔊</span>Voice speaks answers | 🎙️ Microphone input</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin:10px 0;line-height:1.5">⚠️ General guidance only. Consult CA Gurdeep Singh Bagga for personalised advice.</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button style="padding:10px 18px;background:linear-gradient(135deg,var(--gold),var(--g2));color:var(--navy);border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif" onclick="openApiModal()">🤖 Use AI Mode</button>
+      <button style="padding:10px 18px;background:rgba(255,255,255,0.1);color:var(--white);border:1px solid rgba(255,255,255,0.2);border-radius:8px;font-size:13px;cursor:pointer;font-family:'Source Sans 3',sans-serif" onclick="goOffline()">📚 Offline Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- API MODAL -->
+<div class="modal" id="aModal" style="display:none">
+  <div class="mcard">
+    <div style="text-align:center;font-size:28px;margin-bottom:8px">🔑</div>
+    <h2>Enter Anthropic API Key</h2>
+    <p class="msub">TaxBot uses Anthropic Claude AI — the only AI provider that works from browser-based apps without restrictions.</p>
+
+    <div class="khelp" id="kHelp">
+      ⚡ <b>Anthropic Claude API Key — How to Get (Free):</b><br>
+      1. Go to <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com/settings/keys</a><br>
+      2. Sign up for free account → Click <b>"Create Key"</b><br>
+      3. Copy the key starting with <b>sk-ant-...</b><br>
+      4. Paste below and click Start TaxBot<br><br>
+      <b>Why only Anthropic?</b> Google Gemini and OpenAI block direct browser API calls from websites (CORS restriction). Anthropic Claude specifically allows browser-based access.
+    </div>
+
+    <div class="kwrap">
+      <input type="password" class="kinp" id="kInp" placeholder="sk-ant-api03-xxxxxxxxxxxxxxxx..." autocomplete="off"/>
+      <button class="eyebtn" id="eyebtn" onclick="toggleEye()">👁️</button>
+    </div>
+    <div class="kerr" id="kErr"></div>
+
+    <div class="saverow" id="saveRow">
+      <input type="checkbox" id="saveChk" style="width:16px;height:16px;accent-color:var(--gold);cursor:pointer" checked>
+      <div>
+        <label for="saveChk">💾 Save API key for future sessions</label>
+        <div class="sdesc">Uncheck = this session only, not stored in browser</div>
+      </div>
+    </div>
+    <div class="mrow">
+      <button class="btnp" onclick="doSaveKey()">✅ Start TaxBot with AI</button>
+      <button class="btns" onclick="goOffline()">📚 Offline Mode</button>
+    </div>
+    <div class="delrow" id="delRow">
+      <span style="color:var(--muted)">Saved key found. </span>
+      <span class="dellink" onclick="showDel()">🗑️ Delete saved key</span>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM -->
+<div class="delbox" id="delBox">
+  <div class="delcard">
+    <div style="font-size:36px;margin-bottom:12px">🗑️</div>
+    <h3>Delete Saved API Key?</h3>
+    <p>Your saved API key will be permanently removed from this browser.</p>
+    <div class="delbtn-row">
+      <button class="btn-yes" onclick="doDelete()">🗑️ Yes, Delete</button>
+      <button class="btn-no" onclick="hideDel()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="hl">
+    <div class="logo">⚖️</div>
+    <div class="ht"><h1>TaxBot — Income Tax &amp; GST</h1><p>CA Gurdeep Singh Bagga | FY 2025-26</p></div>
+  </div>
+  <div class="hright">
+    <button class="abtn aoff" id="aBtn" onclick="openApiModal()">🔑 Set API Key</button>
+    <div class="sb"><div class="dot"></div>24/7</div>
+  </div>
+</header>
+<div class="sbar"><span id="modeLabel" class="mode">📚 Offline Mode</span><span id="modeDesc">Using built-in knowledge base</span></div>
+<div class="vbar">
+  <span class="vl">🔊 VOICE</span>
+  <button class="vb von" onclick="enableVoice()">🔊 ON</button>
+  <button class="vb voff" onclick="disableVoice()">🔇 OFF</button>
+  <button class="vb vstop" onclick="stopSpeaking()">⏹ Stop</button>
+  <div class="vsp">🐌<input type="range" min="0.6" max="1.4" step="0.1" value="0.88" oninput="SPRATE=parseFloat(this.value);document.getElementById('spd').textContent=this.value+'x'">🐇<span id="spd">0.88x</span></div>
+  <span id="vs">🔊 Voice ON</span>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <h3>⚡ Quick Questions</h3>
+    <div class="st">📌 TDS</div>
+    <div class="qq" onclick="sq('TDS rate on sale of immovable property section 194-IA')">TDS on Property Sale</div>
+    <div class="qq" onclick="sq('TDS on salary section 192')">TDS on Salary</div>
+    <div class="qq" onclick="sq('TDS on professional fees section 194J')">TDS Professional Fees</div>
+    <div class="qq" onclick="sq('TDS on bank FD interest section 194A')">TDS Bank Interest</div>
+    <div class="qq" onclick="sq('TDS on rent section 194I 194IB')">TDS on Rent</div>
+    <div class="qq" onclick="sq('TDS on contractor payment section 194C')">TDS Contractor</div>
+    <div class="qq" onclick="sq('TDS on commission brokerage section 194H')">TDS Commission</div>
+    <div class="qq" onclick="sq('TDS on dividend section 194')">TDS Dividend</div>
+    <div class="st">📌 GST Rates</div>
+    <div class="qq" onclick="sq('GST rate on under construction flat apartment')">GST on Flat</div>
+    <div class="qq" onclick="sq('GST rate on restaurant food')">GST on Restaurant</div>
+    <div class="qq" onclick="sq('GST rate on commercial rent office shop')">GST on Rent</div>
+    <div class="qq" onclick="sq('GST rate on gold jewellery making charges')">GST on Gold</div>
+    <div class="qq" onclick="sq('GST rate on medicines hospital healthcare')">GST on Healthcare</div>
+    <div class="qq" onclick="sq('GST rate on IT software services')">GST on IT Services</div>
+    <div class="qq" onclick="sq('GST rate on insurance premium health life')">GST on Insurance</div>
+    <div class="qq" onclick="sq('GST rate on transport freight GTA')">GST on Transport</div>
+    <div class="qq" onclick="sq('GST rate on education coaching institute')">GST on Education</div>
+    <div class="qq" onclick="sq('GST on ecommerce Amazon Flipkart seller')">GST E-commerce</div>
+    <div class="qq" onclick="sq('GST on export of services zero rated')">GST on Exports</div>
+    <div class="st">📌 Capital Gains</div>
+    <div class="qq" onclick="sq('LTCG tax rate on equity shares mutual funds')">LTCG on Shares</div>
+    <div class="qq" onclick="sq('STCG tax rate on equity shares')">STCG on Shares</div>
+    <div class="qq" onclick="sq('capital gains tax on property sale')">Gains on Property</div>
+    <div class="qq" onclick="sq('capital gains on debt mutual fund')">Gains Debt Fund</div>
+    <div class="qq" onclick="sq('capital gains on gold sovereign gold bond')">Gains on Gold</div>
+    <div class="qq" onclick="sq('section 54 capital gains exemption NHAI bonds')">Section 54 Exemption</div>
+    <div class="st">📌 Income Tax</div>
+    <div class="qq" onclick="sq('income tax slabs FY 2025-26 new regime old regime')">Tax Slabs 2025-26</div>
+    <div class="qq" onclick="sq('how to calculate income tax on salary')">Calculate My Tax</div>
+    <div class="qq" onclick="sq('section 80C deduction limit investments')">Section 80C</div>
+    <div class="qq" onclick="sq('section 80D health insurance deduction')">Section 80D</div>
+    <div class="qq" onclick="sq('HRA exemption calculation formula')">HRA Exemption</div>
+    <div class="qq" onclick="sq('home loan interest deduction section 24B')">Home Loan Tax</div>
+    <div class="qq" onclick="sq('NPS deduction 80CCD tax benefit')">NPS Benefits</div>
+    <div class="qq" onclick="sq('advance tax payment due dates schedule')">Advance Tax</div>
+    <div class="qq" onclick="sq('ITR filing last date FY 2025-26')">ITR Due Date</div>
+    <div class="qq" onclick="sq('which ITR form to file salaried business')">ITR Form Type</div>
+    <div class="qq" onclick="sq('new tax regime vs old regime which is better')">New vs Old Regime</div>
+    <div class="qq" onclick="sq('presumptive taxation 44AD 44ADA')">Presumptive Tax</div>
+    <div class="st">📌 GST Rules</div>
+    <div class="qq" onclick="sq('GST registration threshold limit services goods')">GST Registration</div>
+    <div class="qq" onclick="sq('GSTR-1 GSTR-3B due dates filing')">GST Return Dates</div>
+    <div class="qq" onclick="sq('input tax credit ITC rules blocked credit')">ITC Rules</div>
+    <div class="qq" onclick="sq('GST late filing penalty interest charges')">GST Penalty</div>
+    <div class="qq" onclick="sq('reverse charge mechanism RCM GST')">RCM Rules</div>
+    <div class="qq" onclick="sq('GST composition scheme small business')">Composition Scheme</div>
+    <div class="si">
+      <strong>📞 Personal Advice:</strong><br>CA Gurdeep Singh Bagga<br>📧 gkbagga5010@gmail.com
+    </div>
+  </div>
+
+  <div class="chat-area">
+    <div id="messages">
+      <div class="mb">
+        <div class="bl">⚖️ TAXBOT — FY 2025-26</div>
+        Namaste! I am your Tax Assistant by CA Gurdeep Singh Bagga.<br><br>
+        <b>AI Mode</b> — Enter your Anthropic Claude API key to get answers to any Income Tax or GST question.<br>
+        <b>Offline Mode</b> — 52 tax topics from built-in knowledge base, always available.<br><br>
+        Click <b>"Set API Key"</b> in the top right to activate AI Mode.
+      </div>
+    </div>
+    <div class="ti" id="ti"><div class="td"></div><div class="td"></div><div class="td"></div></div>
+    <div class="vpanel" id="vpanel">
+      <div class="vanim">🎙️</div>
+      <div style="font-size:12px;color:var(--gold);margin-bottom:4px">Listening... Speak your question</div>
+      <div class="vres" id="vres">Speak now...</div>
+      <button class="vstopbtn" onclick="stopMic()">⏹ Stop</button>
+    </div>
+    <div class="ia">
+      <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎙️</button>
+      <input type="text" id="ui" placeholder="Type your Income Tax or GST question..." onkeydown="if(event.key==='Enter')go()"/>
+      <button class="sbtn" onclick="go()">➤</button>
+    </div>
+  </div>
+</div>
+
+<div class="disc">⚠️ General guidance only. Always consult CA Gurdeep Singh Bagga for personalised tax advice. | 📧 gkbagga5010@gmail.com</div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+// ══════════ STATE ══════════
+var G_KEY = '';
+var SPRATE = 0.88;
+var VOn = true;
+var isRec = false;
+var recog = null;
+
+var CTACT = '<div class="ctact">⚠️ For personalised tax advice, consult <b>CA Gurdeep Singh Bagga</b><br>📧 gkbagga5010@gmail.com | Always verify before acting on general guidance.</div>';
+
+// ══════════ SYSTEM PROMPT ══════════
+var SYSP = 'You are TaxBot, an expert Indian tax advisor for CA Gurdeep Singh Bagga. ' +
+'Answer all questions about Indian Income Tax and GST for FY 2025-26 (AY 2026-27). ' +
+'RULES: ' +
+'1. Give direct, specific, correct answers with section numbers, exact rates, thresholds, examples. ' +
+'2. Never refuse a valid Indian Income Tax or GST question. ' +
+'3. For scenario questions (salary of X, sold property for Y, income of minor child), calculate and answer specifically. ' +
+'4. Format with bullet points. Mention Section numbers. Use Rs. for amounts. ' +
+'5. For questions outside Income Tax and GST scope, say: "This is outside my tax advisory scope. Please contact CA Gurdeep Singh Bagga at gkbagga5010@gmail.com" ' +
+'6. Always end with: "For personalised advice, consult CA Gurdeep Singh Bagga | gkbagga5010@gmail.com" ' +
+'FY 2025-26 rates: New regime default; LTCG equity 12.5% exempt Rs.1.25L; STCG equity 20%; Std deduction Rs.75000; TDS property 1% Sec 194-IA for Rs.50L+; 87A rebate upto Rs.7L.';
+
+// ══════════ INIT ══════════
+window.addEventListener('load', function() {
+  var sk = localStorage.getItem('tb_k');
+  if (sk) {
+    G_KEY = sk;
+    updateHdr(true); updateSbar();
+    document.getElementById('wModal').style.display = 'none';
+    addBotHtml(
+      'Welcome back! <b>Anthropic Claude AI</b> Mode is active.<br>' +
+      'Ask me <b>any</b> Income Tax or GST question!<br>' +
+      '<span style="font-size:11px;color:#8090a8">Saved key loaded. ' +
+      '<span style="color:var(--gold);cursor:pointer;text-decoration:underline" onclick="showDel()">🗑️ Delete saved key</span></span>'
+      + CTACT, 'sys');
+  } else {
+    document.getElementById('wModal').style.display = 'flex';
+  }
+  loadVoices();
+  // Welcome voice on first click
+  document.addEventListener('click', function firstClick() {
+    document.removeEventListener('click', firstClick);
+    setTimeout(function() {
+      sayText('Welcome to TaxBot by CA Gurdeep Singh Bagga. I answer any question about Indian Income Tax and GST. Type your question or press the microphone to speak.');
+    }, 1000);
+  }, {once:true});
+});
+
+function loadVoices() {
+  window.speechSynthesis.getVoices();
+  if (window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+}
+
+// ══════════ API MODAL ══════════
+function openApiModal() {
+  document.getElementById('wModal').style.display = 'none';
+  document.getElementById('aModal').style.display = 'flex';
+  var sk = localStorage.getItem('tb_k');
+  if (sk) {
+    document.getElementById('kInp').value = sk;
+    document.getElementById('saveChk').checked = true;
+    document.getElementById('delRow').style.display = 'block';
+  } else {
+    document.getElementById('kInp').value = '';
+    document.getElementById('saveChk').checked = true;
+    document.getElementById('delRow').style.display = 'none';
+  }
+}
+
+function toggleEye() {
+  var i = document.getElementById('kInp');
+  i.type = (i.type === 'password') ? 'text' : 'password';
+}
+
+function doSaveKey() {
+  var k = document.getElementById('kInp').value.trim();
+  var err = document.getElementById('kErr');
+  if (!k) { err.textContent = '⚠️ Please enter your API key.'; err.style.display = 'block'; return; }
+  if (!k.startsWith('sk-ant-')) { err.textContent = '⚠️ Invalid key. Anthropic keys start with "sk-ant-"'; err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  G_KEY = k;
+  var save = document.getElementById('saveChk').checked;
+  if (save) { localStorage.setItem('tb_k', k); }
+  else { localStorage.removeItem('tb_k'); }
+  document.getElementById('aModal').style.display = 'none';
+  updateHdr(true); updateSbar();
+  toast('✅ Anthropic AI Key ' + (save ? 'saved!' : 'active (session only)'));
+  addBotHtml(
+    '✅ <b>Anthropic Claude AI</b> is now active!<br>' +
+    (save ? '💾 Key saved for future sessions.' : '🔒 Session only — not stored.') +
+    '<br><b>Ask me any Income Tax or GST question!</b>' + CTACT, 'sys');
+}
+
+function goOffline() {
+  G_KEY = '';
+  document.getElementById('wModal').style.display = 'none';
+  document.getElementById('aModal').style.display = 'none';
+  updateHdr(false); updateSbar();
+  addBotHtml('📚 <b>Offline Mode.</b> 52 tax topics loaded. Ask any question from the knowledge base!' + CTACT, 'sys');
+}
+
+function updateHdr(on) {
+  var b = document.getElementById('aBtn');
+  var hasSaved = !!localStorage.getItem('tb_k');
+  b.className = 'abtn ' + (on ? 'aon' : 'aoff');
+  b.textContent = on ? ('⚡ Claude AI' + (hasSaved ? ' 🗑️' : '')) : '🔑 Set API Key';
+}
+
+function updateSbar() {
+  document.getElementById('modeLabel').textContent = G_KEY ? '🤖 AI Mode — Anthropic Claude' : '📚 Offline Mode';
+  document.getElementById('modeDesc').textContent = G_KEY ? 'AI answers any Income Tax & GST question' : 'Using built-in knowledge base (52 topics)';
+}
+
+function showDel() { document.getElementById('aModal').style.display = 'none'; document.getElementById('delBox').style.display = 'flex'; }
+function hideDel() { document.getElementById('delBox').style.display = 'none'; }
+function doDelete() {
+  localStorage.removeItem('tb_k');
+  G_KEY = '';
+  hideDel(); updateHdr(false); updateSbar();
+  toast('🗑️ API key deleted');
+  addBotHtml('🗑️ API key deleted. Now in Offline Mode. Click <b>"Set API Key"</b> to add a new key.' + CTACT, 'sys');
+}
+
+// ══════════════════════════════════════════════════
+// ANTHROPIC CLAUDE API — Works from browser
+// Uses anthropic-dangerous-direct-browser-access header
+// ══════════════════════════════════════════════════
+async function callClaude(question) {
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': G_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 1024,
+      system: SYSP,
+      messages: [{ role: 'user', content: question }]
+    })
+  });
+
+  // Try to parse response
+  var data;
+  try { data = await res.json(); }
+  catch(e) { throw {t:'ERR', m:'Invalid response from server. Please try again.'}; }
+
+  // Handle errors
+  if (!res.ok) {
+    if (res.status === 401) throw {t:'BADKEY', m:'Invalid Anthropic API key. Key must start with sk-ant-'};
+    if (res.status === 403) throw {t:'BADKEY', m:'API key not authorised or expired.'};
+    if (res.status === 429) throw {t:'RATE', m:'Too many requests. Please wait 30 seconds.'};
+    if (res.status === 500) throw {t:'ERR', m:'Anthropic server error. Please try again.'};
+    var em = (data && data.error && data.error.message) ? data.error.message : ('Error ' + res.status);
+    throw {t:'ERR', m:em};
+  }
+
+  // Extract text
+  if (data.content && data.content[0] && data.content[0].text) {
+    return data.content[0].text;
+  }
+  throw {t:'ERR', m:'Empty response. Please try again.'};
+}
+
+// ══════════════════════════════════════════════════
+// MAIN SEND FUNCTION
+// ══════════════════════════════════════════════════
+async function go() {
+  var inp = document.getElementById('ui');
+  var text = inp.value.trim();
+  if (!text) return;
+  addUser(text);
+  inp.value = '';
+
+  // Greeting
+  if (/^(hi|hello|namaste|namaskar|hey)\b/i.test(text)) {
+    var g = 'Namaste! I am TaxBot by CA Gurdeep Singh Bagga. Ask me any Income Tax or GST question for FY 2025-26!';
+    addBotHtml(g + CTACT, 'sys'); sayText(g); return;
+  }
+
+  // ── AI MODE ──
+  if (G_KEY) {
+    showTyping(true);
+    try {
+      var ans = await callClaude(text);
+      showTyping(false);
+      if (!ans || !ans.trim()) { showKB(text); return; }
+      var html = fmtAI(ans);
+      if (html.indexOf('gkbagga5010') === -1) html += CTACT;
+      addBotHtml(html, 'ai');
+      sayText(ans);
+    } catch(err) {
+      showTyping(false);
+      var et = (err && err.t) ? err.t : 'ERR';
+      var em = (err && err.m) ? err.m : 'Unknown error';
+
+      if (et === 'BADKEY') {
+        localStorage.removeItem('tb_k');
+        G_KEY = ''; updateHdr(false); updateSbar();
+        addBotHtml(
+          '<div style="background:#fff0f0;border:2px solid #ffb0b0;border-radius:8px;padding:13px">' +
+          '❌ <b>Invalid Anthropic API Key</b><br><br>' +
+          em + '<br><br>' +
+          '<b>How to get correct key:</b><br>' +
+          '• Go to <b>console.anthropic.com/settings/keys</b><br>' +
+          '• Create new key — it must start with <b>sk-ant-</b><br>' +
+          '• Click <b>"Set API Key"</b> button above and enter the new key' +
+          '</div>' + CTACT, 'sys');
+        toast('❌ Invalid API Key — please update');
+        return;
+      }
+
+      if (et === 'RATE') {
+        addBotHtml(
+          '<div style="background:#fff8e6;border:2px solid var(--gold);border-radius:8px;padding:13px">' +
+          '⏳ <b>Rate limit reached.</b> ' + em + '<br>' +
+          'Showing offline answer while waiting.' +
+          '</div>', 'sys');
+        showKB(text);
+        return;
+      }
+
+      // Other error
+      addBotHtml(
+        '<div style="background:#fff0f0;border:2px solid #ffb0b0;border-radius:8px;padding:13px">' +
+        '⚠️ <b>AI Error:</b> ' + esc(em) + '<br>Showing offline answer below.' +
+        '</div>', 'sys');
+      showKB(text);
+    }
+    return;
+  }
+
+  // ── OFFLINE ONLY ──
+  showKB(text);
+}
+
+// Show offline KB answer
+function showKB(text) {
+  showTyping(true);
+  setTimeout(function() {
+    showTyping(false);
+    var result = findAns(text);
+    if (result) {
+      addBotHtml('<div class="atitle">📋 ' + result.t + '</div>' + result.b + CTACT, 'kb');
+      var tmp = document.createElement('div'); tmp.innerHTML = result.b;
+      sayText(result.t + '. ' + (tmp.textContent || '') + '. For personalised advice consult CA Gurdeep Singh Bagga.');
+    } else {
+      // No answer found — direct to CA
+      var hasKey = !!G_KEY;
+      addBotHtml(
+        '<b>I could not find an answer for:</b> "' + esc(text) + '"<br><br>' +
+        (hasKey
+          ? 'The AI could not answer this. Please try rephrasing, or ensure the question is about Indian Income Tax or GST.<br><br>'
+          : 'This topic is not in the offline knowledge base.<br>To get AI-powered answers to <b>any</b> tax question, click <b>"Set API Key"</b> to activate AI Mode.<br><br>') +
+        '<div class="ctact">📞 <b>For personalised advice on this topic, contact:</b><br>' +
+        'CA Gurdeep Singh Bagga<br>📧 gkbagga5010@gmail.com</div>', 'sys');
+      sayText('I could not find an answer for this question. Please contact CA Gurdeep Singh Bagga at gkbagga5010 at gmail dot com for personalised advice.');
+    }
+  }, 300);
+}
+
+// ══════════════════════════════════════
+// KNOWLEDGE BASE — 52 TOPICS
+// ══════════════════════════════════════
+var KB = [
+{k:['tds','property sale','immovable','194ia','194-ia'],t:'TDS on Property Sale — Sec 194-IA',b:'<div class="ebox"><b>Rate: <span class="rate">1%</span> | Threshold: Sale price ≥ Rs.50 lakh</b></div><div class="arow">BUYER deducts TDS | File Form 26QB within 30 days</div><div class="arow">Issue Form 16B to seller | No PAN → TDS 20%</div><div class="arow">Not on agricultural land</div><br><b>Example:</b> Property Rs.80L → TDS Rs.80,000'},
+{k:['tds','salary','192','salaried'],t:'TDS on Salary — Sec 192',b:'<div class="ebox"><b>Rate: <span class="rate">As per slab</span> — no fixed rate</b></div><div class="arow">New Regime: 0–3L:Nil | 3–7L:5% | 7–10L:10% | 10–12L:15% | 12–15L:20% | >15L:30%</div><div class="arow">87A rebate: Zero tax ≤ Rs.7L | Std deduction: Rs.75,000</div><div class="arow">Form 12BB by employee | Form 16 by employer by 15th June</div>'},
+{k:['tds','professional fee','194j','ca fee','doctor fee','lawyer fee','technical service'],t:'TDS on Professional Fees — Sec 194J',b:'<div class="arow">Professional (CA, Doctor, Lawyer, Engineer): <span class="rate">10%</span></div><div class="arow">Technical services (IT, BPO, call centre): <span class="rate">2%</span></div><div class="arow">Royalty: <span class="rate">10%</span></div><div class="arow">Threshold: Rs.30,000/year | No PAN: 20%</div>'},
+{k:['tds','bank interest','194a','fd interest','fixed deposit'],t:'TDS on Bank Interest — Sec 194A',b:'<div class="ebox"><b>Rate: <span class="rate">10%</span></b></div><div class="arow">Regular: Interest > Rs.40,000/year | Senior Citizens (60+): > Rs.50,000/year</div><div class="arow">Form 15G (below 60) or Form 15H (60+) to avoid TDS</div>'},
+{k:['tds','rent','194i','194ib'],t:'TDS on Rent',b:'<b>Sec 194I — Companies:</b><div class="arow">Building/Furniture: <span class="rate">10%</span> | Threshold: Annual rent > Rs.2,40,000</div><div class="arow">Plant & Machinery: <span class="rate">2%</span></div><b>Sec 194IB — Individuals:</b><div class="arow"><span class="rate">5%</span> when monthly rent > Rs.50,000 | File Form 26QC</div>'},
+{k:['tds','contractor','194c'],t:'TDS on Contractor — Sec 194C',b:'<div class="arow">Individual/HUF: <span class="rate">1%</span> | Company/Firm: <span class="rate">2%</span></div><div class="arow">Threshold: Single > Rs.30,000 OR annual > Rs.1,00,000</div><div class="arow">Transport with PAN + ≤10 vehicles: NIL TDS</div>'},
+{k:['tds','commission','brokerage','194h'],t:'TDS on Commission — Sec 194H',b:'<div class="ebox">Rate: <span class="rate">5%</span> | Threshold: > Rs.15,000/year</div><div class="arow">Insurance, real estate, MF distributor, travel agent</div>'},
+{k:['tds','dividend','194'],t:'TDS on Dividend — Sec 194',b:'<div class="ebox">Rate: <span class="rate">10%</span> | Threshold: > Rs.5,000/year per company</div><div class="arow">Form 15G/15H to avoid TDS | Dividend taxable at slab rate</div>'},
+{k:['tds','lottery','prize','winnings','194b','online gaming','fantasy'],t:'TDS on Lottery/Online Gaming',b:'<b>Sec 194B (Lottery):</b><div class="arow">Rate: <span class="rate">30%</span> | Threshold: > Rs.10,000 per event</div><b>Sec 194BA (Online Gaming, July 2023+):</b><div class="arow">Rate: <span class="rate">30%</span> on net winnings | No threshold</div>'},
+{k:['tds','nri','non resident','195','nri property'],t:'TDS on NRI — Sec 195',b:'<b>NRI selling property:</b><div class="arow">LTCG (≥2 years): <span class="rate">12.5% + surcharge + cess</span></div><div class="arow">STCG (<2 years): <span class="rate">30% + surcharge + cess</span></div><div class="arow">TDS on ENTIRE sale value | Lower TDS via Form 13</div>'},
+{k:['gst','flat','apartment','under construction','residential property','affordable housing'],t:'GST on Residential Flat',b:'<b>Under Construction:</b><div class="arow">Affordable (≤Rs.45L, ≤60 sqmt metro/90 sqmt others): <span class="rate">1%</span> No ITC</div><div class="arow">Other residential: <span class="rate">5%</span> No ITC</div><b>Ready to Move:</b><div class="arow"><span class="rate">NIL</span> — only Stamp Duty + Registration</div><div class="arow">Commercial: <span class="rate">12%</span></div>'},
+{k:['gst','restaurant','food','dining','zomato','swiggy','catering'],t:'GST on Restaurant/Food',b:'<div class="arow">Standalone restaurant (AC or non-AC): <span class="rate">5%</span> (No ITC)</div><div class="arow">Restaurant in 5-star hotel (room > Rs.7,500/night): <span class="rate">18%</span></div><div class="arow">Zomato/Swiggy: <span class="rate">5%</span> | Outdoor catering/banquet: <span class="rate">18%</span></div>'},
+{k:['gst','commercial rent','office rent','shop rent','warehouse'],t:'GST on Commercial Rent',b:'<div class="arow">Commercial property: <span class="rate">18%</span> (if landlord turnover > Rs.20L)</div><div class="arow">Residential for residential use: <span class="rate">EXEMPT</span></div><div class="arow">Residential for commercial use: <span class="rate">18% RCM</span> (tenant pays)</div>'},
+{k:['gst','gold','jewellery','silver','making charges'],t:'GST on Gold and Jewellery',b:'<div class="arow">Gold raw/bars/coins: <span class="rate">3%</span> | Jewellery metal: <span class="rate">3%</span></div><div class="arow">Making charges: <span class="rate">5%</span> | Diamonds: <span class="rate">0.25%</span></div><div class="arow">Old gold exchange: No GST</div>'},
+{k:['gst','hospital','doctor','healthcare','diagnostic','ambulance','medicine'],t:'GST on Healthcare',b:'<div class="arow">Doctor/hospital/diagnostic/ambulance: <span class="rate">EXEMPT</span></div><div class="arow">Life-saving drugs/vaccines: <span class="rate">5%</span></div><div class="arow">Branded medicines: <span class="rate">12%</span> | Hearing aids/wheelchairs: <span class="rate">NIL</span></div>'},
+{k:['gst','it service','software','saas','cloud'],t:'GST on IT/Software',b:'<div class="arow">All IT services, software, SaaS, cloud: <span class="rate">18%</span></div><div class="ebox"><b>Export to foreign client: <span class="rate">ZERO RATED (0%)</span></b></div>'},
+{k:['gst','insurance','health insurance','life insurance','term plan','ulip'],t:'GST on Insurance',b:'<div class="arow">Term life: <span class="rate">18%</span> | Health (Mediclaim): <span class="rate">18%</span></div><div class="arow">Endowment 1st yr: <span class="rate">4.5%</span> | 2nd yr+: <span class="rate">2.25%</span></div><div class="arow">Motor: <span class="rate">18%</span> | ULIPs on charges: <span class="rate">18%</span></div>'},
+{k:['gst','transport','freight','gta','goods transport','courier','ola','uber'],t:'GST on Transport',b:'<div class="arow">GTA RCM: <span class="rate">5%</span> | GTA forward: <span class="rate">12%</span></div><div class="arow">Rail freight: <span class="rate">5%</span> | Air economy: <span class="rate">5%</span> | Air business: <span class="rate">12%</span></div><div class="arow">Courier: <span class="rate">18%</span> | Cab (Ola/Uber): <span class="rate">5%</span> | Auto/metro/buses: EXEMPT</div>'},
+{k:['gst','education','school','college','coaching','tuition','online course'],t:'GST on Education',b:'<div class="arow">Recognised schools/colleges (pre-school to degree): <span class="rate">EXEMPT</span></div><div class="arow">Private coaching/tuition: <span class="rate">18%</span></div><div class="arow">Online education: <span class="rate">18%</span> | Printed books: <span class="rate">NIL</span></div>'},
+{k:['gst ecommerce','amazon gst','flipkart gst','online selling gst'],t:'GST for E-commerce',b:'<div class="ebox"><b>Mandatory: Every e-commerce seller MUST register regardless of turnover</b></div><div class="arow">TCS by platform: <span class="rate">1%</span> | GST rate depends on product</div>'},
+{k:['export gst','zero rated','gst on export'],t:'GST on Exports',b:'<div class="ebox"><b>All exports: <span class="rate">ZERO RATED (0%)</span></b></div><div class="arow">LUT option: No GST, claim full ITC refund</div><div class="arow">IT/BPO to foreign clients = Zero rated</div>'},
+{k:['ltcg','long term capital gain','equity shares','equity mutual fund'],t:'LTCG on Equity Shares/MF',b:'<div class="ebox"><b>Holding >12 months | Rate: <span class="rate">12.5%</span> | Exempt: Rs.1,25,000/year</b></div><div class="arow">No indexation | STT must be paid</div><br><b>Example:</b> LTCG Rs.3.5L − Rs.1.25L = Rs.2.25L × 12.5% = Rs.28,125 tax'},
+{k:['stcg','short term capital gain','equity shares'],t:'STCG on Equity Shares/MF',b:'<div class="ebox"><b>Holding ≤12 months | Rate: <span class="rate">20%</span></b></div><div class="arow">No exemption | Example: STCG Rs.1L × 20% = Rs.20,000 tax</div>'},
+{k:['capital gain','property sale','house sale','land sale'],t:'Capital Gains on Property',b:'<div class="arow">STCG (<24 months): <span class="rate">Slab Rate</span></div><div class="arow">LTCG (≥24 months): <span class="rate">12.5%</span> without indexation</div><div class="ebox">Bought before July 23, 2024: Choose 12.5% (no indexation) OR 20% (with indexation)</div><div class="arow">Sec 54: Buy new house (2 yr purchase/3 yr construction)</div><div class="arow">Sec 54EC: NHAI/REC bonds within 6 months | Max Rs.50L</div>'},
+{k:['capital gain','debt mutual fund','debt fund'],t:'Capital Gains on Debt Funds',b:'<div class="ebox"><b>From April 2023: ALL gains at <span class="rate">Slab Rate</span></b><br>No indexation, no special rate, holding period irrelevant</div>'},
+{k:['capital gain','gold','gold etf','sovereign gold bond','sgb'],t:'Capital Gains on Gold',b:'<div class="arow">Physical/ETF STCG (<24 months): <span class="rate">Slab Rate</span></div><div class="arow">Physical/ETF LTCG (≥24 months): <span class="rate">12.5%</span></div><div class="arow">SGB held to maturity (8 years): <span class="rate">FULLY EXEMPT</span></div>'},
+{k:['section 54','54 exemption','54ec','54f','nhai','rec bond'],t:'Capital Gains Exemptions — Sec 54/54EC/54F',b:'<b>Sec 54:</b> Sell house → buy new house (2 yr/3 yr) → Full LTCG exempt<br><b>Sec 54EC:</b> NHAI/REC bonds within 6 months | Max Rs.50L | 5-yr lock-in<br><b>Sec 54F:</b> Sell any asset → invest entire sale proceeds in house'},
+{k:['tax slab','income tax slab','slab rate','new regime','old regime'],t:'Income Tax Slabs — FY 2025-26',b:'<b>NEW REGIME (Default):</b><div class="arow">0–3L:Nil | 3–7L:5% | 7–10L:10% | 10–12L:15% | 12–15L:20% | >15L:30%</div><div class="arow">★ Rebate 87A: Zero tax ≤ Rs.7L | Std Deduction: Rs.75,000</div><b>OLD REGIME:</b><div class="arow">0–2.5L:Nil | 2.5–5L:5% | 5–10L:20% | >10L:30% | Rebate ≤ Rs.5L</div>'},
+{k:['calculate tax','how much tax','tax on salary','tax payable','income tax calculation'],t:'Income Tax Calculation',b:'<div class="ebox"><b>Salary Rs.12,00,000 (New Regime):</b><br>Less Rs.75,000 → Taxable Rs.11,25,000<br>Rs.3L:Nil | Rs.4L×5%=Rs.20K | Rs.3L×10%=Rs.30K | Rs.1.25L×15%=Rs.18,750<br><b>Tax = Rs.68,750 + 4% cess = Rs.71,500</b></div>'},
+{k:['section 80c','80c','ppf','elss','lic deduction','tax saving'],t:'Section 80C Deductions',b:'<div class="ebox"><b>Limit: Rs.1,50,000/year | Old Regime ONLY</b></div><div class="arow">PPF, ELSS, LIC, NSC, 5-yr FD, Home loan principal, Tuition, SSY, SCSS, EPF</div><div class="arow">Extra: NPS 80CCD(1B) = Rs.50,000 ABOVE 80C → Total Rs.2L deduction</div>'},
+{k:['section 80d','80d','health insurance deduction','mediclaim'],t:'Section 80D',b:'<b>Self/Spouse/Children:</b><div class="arow">Below 60: <span class="rate">Rs.25,000</span> | 60+: <span class="rate">Rs.50,000</span></div><b>Additional for Parents:</b><div class="arow">Below 60: <span class="rate">Rs.25,000</span> | 60+: <span class="rate">Rs.50,000</span></div><div class="arow">Max (all 60+): Rs.1,00,000 | Old Regime only</div>'},
+{k:['hra','house rent allowance','hra exemption','hra calculation'],t:'HRA Exemption',b:'<b>Exempt = MINIMUM of:</b><div class="arow">① Actual HRA | ② 50% basic (Metro)/40% (Non-metro) | ③ Rent − 10% basic</div><div class="ebox">Example: Basic Rs.50K | HRA Rs.20K | Rent Rs.18K | Delhi → <b>Rs.13,000/month exempt</b></div><div class="arow">Old Regime only | PAN of landlord if rent > Rs.1L/year</div>'},
+{k:['home loan','section 24','24b','home loan interest','home loan tax'],t:'Home Loan Tax Benefits',b:'<b>Sec 24B Interest:</b><div class="arow">Self-occupied: <span class="rate">Rs.2,00,000/yr</span> | Let-out: Full interest</div><b>Sec 80C Principal:</b><div class="arow"><span class="rate">Rs.1,50,000/yr</span> within 80C</div><div class="arow">⚠️ NOT available under New Tax Regime</div>'},
+{k:['nps','national pension','80ccd','nps tax'],t:'NPS Tax Benefits',b:'<div class="arow">80CCD(1): Within Rs.1.5L 80C limit</div><div class="arow">80CCD(1B): Extra <span class="rate">Rs.50,000</span> ABOVE 80C</div><div class="arow">80CCD(2) Employer: 14%/10% | No limit | ✅ Both Regimes</div><div class="arow">60% at retirement = TAX FREE | 40% annuity = Taxable</div>'},
+{k:['advance tax','234b','234c','advance tax schedule'],t:'Advance Tax Schedule FY 2025-26',b:'<div class="arow">Who: Tax liability > Rs.10,000 after TDS</div><div class="ebox">15 Jun 2025: <span class="rate">15%</span> | 15 Sep: <span class="rate">45%</span> | 15 Dec: <span class="rate">75%</span> | 15 Mar 2026: <span class="rate">100%</span></div><div class="arow">Sec 234B/234C penalty: 1%/month | Senior citizens (60+) with no business: EXEMPT</div>'},
+{k:['itr','filing date','last date','itr deadline','when to file'],t:'ITR Filing Due Dates FY 2025-26',b:'<div class="arow">Salaried/Non-audit: <span class="rate">31st July 2026</span></div><div class="arow">Audit cases (turnover > Rs.1 crore): <span class="rate">31st October 2026</span></div><div class="arow">Belated return: <span class="rate">31st December 2026</span></div><div class="arow">Late fee Sec 234F: Rs.5,000 (>Rs.5L) | Rs.1,000 (≤Rs.5L)</div>'},
+{k:['itr form','which itr','itr type','itr-1','itr-2','itr-3','itr-4'],t:'Which ITR Form to File',b:'<div class="arow">ITR-1: Salaried, 1 house, ≤Rs.50L, no capital gains</div><div class="arow">ITR-2: Salary + capital gains, 2+ houses, foreign income</div><div class="arow">ITR-3: Business/professional income</div><div class="arow">ITR-4: Presumptive tax (44AD, 44ADA)</div>'},
+{k:['new regime','old regime','which regime','regime comparison'],t:'New vs Old Tax Regime',b:'<b>New Regime better if:</b><div class="arow">Minimal deductions | Income ≤ Rs.7.75L (zero tax)</div><b>Old Regime better if deductions > Rs.3.75L:</b><div class="arow">High HRA + Home loan + Max 80C + 80D</div><div class="arow">Switch: Form 10-IEA | Salaried can switch yearly</div>'},
+{k:['presumptive','44ad','44ada','44ae'],t:'Presumptive Taxation',b:'<b>44AD Business:</b><div class="arow">≤Rs.2Cr(cash)/Rs.3Cr(digital) | Profit: <span class="rate">8%</span>/<span class="rate">6%</span></div><b>44ADA Professionals:</b><div class="arow">≤Rs.75L | Profit: <span class="rate">50%</span></div><div class="arow">No books required | ITR-4 | No audit</div>'},
+{k:['standard deduction','75000 deduction','salaried standard'],t:'Standard Deduction',b:'<div class="ebox"><b>Rs.75,000/year — Both Old and New Regime</b></div><div class="arow">No bills needed | Pensioners: Rs.75,000</div>'},
+{k:['rental income','income from house property','let out property'],t:'Tax on Rental Income',b:'<div class="arow">NAV = Annual rent − Municipal taxes</div><div class="arow">Std deduction: <span class="rate">30%</span> of NAV | Home loan interest: Full deduction (Old Regime)</div>'},
+{k:['surcharge','income tax surcharge'],t:'Surcharge on Income Tax',b:'<div class="arow">Rs.50L–1Cr: <span class="rate">10%</span> | Rs.1–2Cr: <span class="rate">15%</span> | Rs.2–5Cr: <span class="rate">25%</span></div><div class="arow">>Rs.5Cr: <span class="rate">37%</span>(old)/<span class="rate">25%</span>(new) | + 4% Cess</div>'},
+{k:['freelancer','freelance income','self employed professional'],t:'Tax for Freelancers',b:'<div class="arow">Freelance = Business/Profession income — taxed at slab rate</div><div class="arow">Option 1: Actual books — deduct expenses, pay tax on net profit</div><div class="arow">Option 2: Presumptive 44ADA — 50% deemed profit (professionals)</div><div class="arow">TDS by client: 10% professional / 2% technical (Sec 194J)</div>'},
+{k:['minor child income','clubbing','income of minor','minor tax','child income'],t:'Tax on Income of Minor Child',b:'<div class="ebox"><b>Income of minor child is CLUBBED with parent\'s income (Sec 64(1A))</b></div><div class="arow">Clubbed with parent having HIGHER income</div><div class="arow">Exemption: Rs.1,500 per year per minor child is deducted from clubbed income</div><b>NOT clubbed (taxed in child\'s hands):</b><div class="arow">• Income from manual work by the minor</div><div class="arow">• Income from special skill/talent of the minor</div><div class="arow">• Income of a minor who is disabled (Sec 80U)</div><div class="arow">When minor turns 18: Income taxed in their own hands from that year</div>'},
+{k:['form 26as','annual information statement','ais','tds credit'],t:'Form 26AS / AIS',b:'<div class="arow">Form 26AS: All TDS on your PAN + advance tax paid</div><div class="arow">AIS: Detailed — interest, dividends, capital gains, GST turnover</div><div class="arow">Access: incometax.gov.in → AIS or View 26AS</div>'},
+{k:['pan aadhaar','pan card','pan link'],t:'PAN and Aadhaar Linking',b:'<div class="arow">Mandatory | Late fee: Rs.1,000 | Link at incometax.gov.in</div><div class="arow">Inoperative PAN: Cannot file ITR | TDS at 20% on all payments</div>'},
+{k:['gst registration','register gst','gst threshold','gst limit'],t:'GST Registration',b:'<div class="arow">Services: > <span class="rate">Rs.20 lakh</span> | Goods: > <span class="rate">Rs.40 lakh</span></div><div class="arow">Special states (NE/Himachal/J&K): Rs.10 lakh</div><div class="arow">Mandatory regardless: E-commerce | Inter-state | RCM payers</div>'},
+{k:['gstr-1','gstr-3b','gstr','gst return date'],t:'GST Return Due Dates',b:'<b>GSTR-1:</b><div class="arow">Monthly (>Rs.5Cr): <span class="rate">11th</span> | Quarterly: Last day of next month</div><b>GSTR-3B:</b><div class="arow">>Rs.5Cr: <span class="rate">20th</span> | ≤Rs.5Cr: <span class="rate">22nd/24th</span></div><b>GSTR-9 Annual:</b><div class="arow">>Rs.2Cr: <span class="rate">31st December</span></div>'},
+{k:['input tax credit','itc','gst credit','blocked credit'],t:'ITC Rules in GST',b:'<b>Available:</b> Business use | Capital goods<br><b>Blocked:</b> Personal vehicles | Food | Club | Own building<br><b>Conditions:</b> Valid invoice | Goods received | Pay supplier within 180 days'},
+{k:['gst penalty','gst late fee','gst interest'],t:'GST Late Fees and Penalties',b:'<div class="arow">GSTR-1/3B with tax: <span class="rate">Rs.50/day</span> | NIL: <span class="rate">Rs.20/day</span> | Max Rs.10,000</div><div class="arow">Unpaid GST interest: <span class="rate">18% p.a.</span></div>'},
+{k:['reverse charge','rcm','reverse charge mechanism'],t:'Reverse Charge (RCM)',b:'<div class="ebox"><b>Buyer pays GST to government directly (not supplier)</b></div><div class="arow">GTA | Advocate | Director | Import of services | Security (unregistered)</div>'},
+{k:['composition scheme','composition gst'],t:'GST Composition Scheme',b:'<div class="arow">Traders/Manufacturers ≤Rs.1.5Cr: <span class="rate">1%</span></div><div class="arow">Restaurants ≤Rs.1.5Cr: <span class="rate">5%</span> | Services ≤Rs.50L: <span class="rate">6%</span></div><div class="arow">No ITC | No inter-state | Quarterly return CMP-08</div>'}
+];
+
+function findAns(q) {
+  q = q.toLowerCase().replace(/[?.,!;:'"]/g,' ').replace(/\s+/g,' ').trim();
+  var best=null, top=0;
+  KB.forEach(function(it){
+    var sc=0;
+    it.k.forEach(function(kw){if(q.indexOf(kw)!==-1)sc+=kw.split(' ').length*3;});
+    q.split(' ').forEach(function(w){if(w.length>3)it.k.forEach(function(kw){if(kw.indexOf(w)!==-1&&q.indexOf(kw)===-1)sc+=0.5;});});
+    if(sc>top){top=sc;best=it;}
+  });
+  return (best&&top>=1.5)?best:null;
+}
+
+// ══════════ FORMAT AI RESPONSE ══════════
+function fmtAI(t) {
+  var s=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  s=s.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  s=s.replace(/^#{1,3}\s+(.+)$/gm,'<div style="font-weight:700;color:#0a3060;margin:8px 0 4px;font-size:14px">$1</div>');
+  s=s.replace(/^[•\-\*]\s+(.+)$/gm,'<div style="padding:3px 0;border-bottom:1px solid #f0f4f8;font-size:13px">• $1</div>');
+  s=s.replace(/(Section\s+\d+[\w\-]*)/g,'<span class="sec">$1</span>');
+  s=s.replace(/(Rs\.\s*[\d,]+(?:\.\d+)?(?:\s*(?:lakh|crore|L|Cr))?)/gi,'<strong style="color:#1a5a2a">$1</strong>');
+  s=s.replace(/(\d+\.?\d*%)/g,'<span class="rate">$1</span>');
+  s=s.replace(/(For personalised advice[^\n<]*gkbagga5010[^\n<]*)/gi,'<div class="ctact">⚠️ $1</div>');
+  s=s.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+  return s;
+}
+
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function addUser(t){var d=document.createElement('div');d.className='mu';d.textContent=t;var m=document.getElementById('messages');m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function addBotHtml(h,src){
+  var d=document.createElement('div');d.className='mb';
+  var tag=src==='ai'?'<span class="src-ai">🤖 AI Answer</span>':src==='kb'?'<span class="src-kb">📚 Offline KB</span>':'';
+  d.innerHTML='<div class="bl">⚖️ TAXBOT — FY 2025-26'+tag+'</div>'+h;
+  var m=document.getElementById('messages');m.appendChild(d);m.scrollTop=m.scrollHeight;
+}
+function showTyping(s){var ti=document.getElementById('ti');s?ti.classList.add('show'):ti.classList.remove('show');if(s)document.getElementById('messages').scrollTop=99999;}
+
+// ══════════ VOICE ══════════
+var VOn=true, SPRATE=0.88;
+function enableVoice(){VOn=true;document.getElementById('vs').textContent='🔊 Voice ON';toast('🔊 Voice ON');}
+function disableVoice(){VOn=false;window.speechSynthesis.cancel();document.getElementById('vs').textContent='🔇 Voice OFF';toast('🔇 Voice OFF');}
+function stopSpeaking(){window.speechSynthesis.cancel();document.getElementById('vs').textContent=VOn?'🔊 Voice ON':'🔇 Voice OFF';document.getElementById('vs').className='';}
+
+function getBestVoice(){
+  var vs=window.speechSynthesis.getVoices();
+  return vs.find(function(v){return v.lang==='en-IN'&&v.name.indexOf('Google')!==-1;})||
+         vs.find(function(v){return v.lang==='en-IN';})||
+         vs.find(function(v){return v.lang==='en-GB'&&v.name.indexOf('Google')!==-1;})||
+         vs.find(function(v){return v.lang.startsWith('en');});
+}
+
+function sayText(raw){
+  if(!VOn||!raw)return;
+  window.speechSynthesis.cancel();
+  var tmp=document.createElement('div');tmp.innerHTML=raw;
+  var t=tmp.textContent||raw;
+  t=t.replace(/For personalised advice[^\n]*/gi,'For personalised advice, please consult CA Gurdeep Singh Bagga.')
+     .replace(/gkbagga5010[^\s]*/gi,'')
+     .replace(/Rs\.\s*/g,'Rupees ').replace(/₹/g,'Rupees ')
+     .replace(/\bTDS\b/g,'T D S').replace(/\bGST\b/g,'G S T')
+     .replace(/\bITC\b/g,'I T C').replace(/\bPAN\b/g,'P A N')
+     .replace(/\bNRI\b/g,'N R I').replace(/\bITR\b/g,'Income Tax Return')
+     .replace(/\bFY\b/g,'Financial Year').replace(/\bLTCG\b/g,'long term capital gains')
+     .replace(/\bSTCG\b/g,'short term capital gains').replace(/\bSec\b/g,'Section')
+     .replace(/([\d,]+)L\b/g,'$1 lakh')
+     .replace(/[⚠️📞✅❌★•→💾🔒🗑️⚡]/g,' ').replace(/\s+/g,' ').trim();
+  if(!t)return;
+  var parts=t.split(/[.!?]+/),chunks=[],cur='';
+  parts.forEach(function(s){s=s.trim();if(!s)return;if((cur+s).length>220){if(cur)chunks.push(cur.trim());cur=s+'. ';}else cur+=s+'. ';});
+  if(cur.trim())chunks.push(cur.trim());
+  if(!chunks.length)chunks=[t];
+  spkC(chunks,0);
+}
+
+function spkC(ch,i){
+  if(i>=ch.length){document.getElementById('vs').textContent='🔊 Voice ON';document.getElementById('vs').className='';return;}
+  if(!ch[i]||!ch[i].trim()){spkC(ch,i+1);return;}
+  var u=new SpeechSynthesisUtterance(ch[i]);
+  u.lang='en-IN';u.rate=SPRATE;u.pitch=1.1;u.volume=1;
+  var v=getBestVoice();if(v)u.voice=v;
+  u.onstart=function(){document.getElementById('vs').textContent='🔊 Speaking...';document.getElementById('vs').className='sp';};
+  u.onend=function(){spkC(ch,i+1);};u.onerror=function(){spkC(ch,i+1);};
+  window.speechSynthesis.speak(u);
+}
+
+// ══════════ MICROPHONE ══════════
+var isRec=false,recog=null;
+function toggleMic(){
+  if(!('webkitSpeechRecognition'in window)&&!('SpeechRecognition'in window)){toast('❌ Use Chrome for voice');return;}
+  if(isRec){stopMic();return;}
+  try{
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    recog=new SR();recog.lang='en-IN';recog.continuous=false;recog.interimResults=true;
+    recog.onstart=function(){isRec=true;document.getElementById('micBtn').classList.add('rec');document.getElementById('micBtn').textContent='🔴';document.getElementById('ui').placeholder='🎙️ Listening...';document.getElementById('vpanel').classList.add('show');document.getElementById('vres').textContent='Speak now...';window.speechSynthesis.cancel();};
+    recog.onresult=function(ev){var int2='',fin='';for(var i=ev.resultIndex;i<ev.results.length;i++){if(ev.results[i].isFinal)fin+=ev.results[i][0].transcript;else int2+=ev.results[i][0].transcript;}document.getElementById('vres').textContent=fin||int2||'...';if(fin)document.getElementById('ui').value=fin.trim();};
+    recog.onspeechend=function(){recog.stop();};
+    recog.onerror=function(e){var m={'no-speech':'No speech','audio-capture':'No mic','not-allowed':'Permission denied'};toast('🎙️ '+(m[e.error]||e.error));setTimeout(stopMic,1500);};
+    recog.onend=function(){var ft=document.getElementById('ui').value.trim();stopMic();if(ft){toast('✅ Heard: '+ft.substring(0,40));setTimeout(go,400);}else toast('❌ Could not hear. Type instead.');};
+    recog.start();toast('🎙️ Listening... Speak clearly');
+  }catch(e){toast('❌ Mic error: '+e.message);stopMic();}
+}
+function stopMic(){isRec=false;document.getElementById('micBtn').classList.remove('rec');document.getElementById('micBtn').textContent='🎙️';document.getElementById('ui').placeholder='Type your Income Tax or GST question...';document.getElementById('vpanel').classList.remove('show');if(recog){try{recog.abort();}catch(e){}recog=null;}}
+
+function sq(q){document.getElementById('ui').value=q;go();}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);}
+</script>
+</body>
+</html>
